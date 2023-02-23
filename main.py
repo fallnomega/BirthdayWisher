@@ -27,15 +27,24 @@ for x in range(len(birthdays)):
     b_month = birthdays.iloc[x, 3] = birthdays.iloc[x, 3]
     b_day = birthdays.iloc[x, 4]
     age = todays_date.year - b_year
-    # email birthday person if it is their birthday
+
+    # pick letter template to use
+    letter_number = random.randint(1, 3)
+    lettername = f"letter_{letter_number}.txt"
+    letter_to_send = ''
+    with open(lettername, 'r') as letter_selected:
+        letter_to_send = letter_selected.read()
+        letter_selected.close()
+    letter_to_send = letter_to_send.replace('[NAME]', b_name)
+    # send birthday email if today is someone's birthday
     if todays_date.month == b_month and todays_date.day == b_day:
-        email = "YOUR EMAIL"
-        password = "YOUR PASSWORD"
+        email = "YOUR EMAIL ADDRESS"
+        password = "YOUR EMAIL PASSWORD"  # NOT SECURE BUT FOR LEARNING EXERCISE WE SHALL STORE IT HERE
         connection = smtplib.SMTP("smtp.gmail.com", 587)
         connection.ehlo()
         connection.starttls()
         connection.login(user=email, password=password)
         connection.sendmail(from_addr=email,
                             to_addrs=f"{b_email}",
-                            msg=f"Subject:Happy {age} Birthday {b_name}!\n\nHappy birthday! Enjoy this quote as your journey into the new year of your life.\n\n{quote}")
+                            msg=f"Subject:Happy {age} Birthday {b_name}!\n\n{letter_to_send}\n\nP.S. Here is an inspirational Quote for you: {quote}")
         connection.close()
